@@ -73,3 +73,30 @@ def test_split_lines(test_list_mono_r: str):
     for index, line in enumerate(lines):
         assert type(line) == str
         assert line != "" and len(line) > 0
+
+
+@pytest.mark.parametrize(
+    "line_for_parsing_incorrect", ["44fda5ad", "333 Relic of Progenitus", "fda 3333fdsaff adfaf f"]
+)
+def test_line_parses_with_incorrect_data_to_None(line_for_parsing_incorrect: str):
+    import src.list_parser
+
+    ERR = (-1, "ERR")
+
+    should_be_None = list_parser.parse_line_to_count_and_card_title(line_for_parsing_incorrect)
+    assert should_be_None == ERR
+
+
+@pytest.fixture()
+def line_for_parsing_correct() -> str:
+    return "3 Relic of Progenitus"
+
+
+def test_line_parses_to_count_and_card_title(line_for_parsing_correct: str):
+    import src.list_parser
+
+    line_parsed: tuple[int, str] = list_parser.parse_line_to_count_and_card_title(line_for_parsing_correct)
+    assert line_parsed is not None
+    assert type(line_parsed) == tuple
+    assert line_parsed[0] == 3
+    assert line_parsed[1] == "Relic of Progenitus"
