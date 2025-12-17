@@ -33,7 +33,6 @@ def file_path_test_list() -> str:
 
 
 def test_read_file(file_path_test_list: str):
-    import src.list_parser
 
     list_as_string: str = list_parser.read_file_to_string(file_path_test_list)
     assert list_as_string is not None
@@ -65,7 +64,6 @@ def test_list_mono_r() -> str:
 
 
 def test_split_lines(test_list_mono_r: str):
-    import src.list_parser
 
     lines: list[str] = list_parser.parse_into_lines(test_list_mono_r)
     assert lines is not None
@@ -78,8 +76,7 @@ def test_split_lines(test_list_mono_r: str):
 @pytest.mark.parametrize(
     "line_for_parsing_incorrect", ["44fda5ad", "333 Relic of Progenitus", "fda 3333fdsaff adfaf f"]
 )
-def test_line_parses_with_incorrect_data_to_None(line_for_parsing_incorrect: str):
-    import src.list_parser
+def test_line_parses_with_incorrect_data_to_none(line_for_parsing_incorrect: str):
 
     ERR = (-1, "ERR")
 
@@ -93,7 +90,6 @@ def line_for_parsing_correct() -> str:
 
 
 def test_line_parses_to_count_and_card_title(line_for_parsing_correct: str):
-    import src.list_parser
 
     line_parsed: tuple[int, str] = list_parser.parse_line_to_count_and_card_title(line_for_parsing_correct)
     assert line_parsed is not None
