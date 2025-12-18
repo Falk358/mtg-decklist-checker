@@ -16,15 +16,11 @@ def parse_line_in_file_correct():
 
 
 def test_each_line_starts_with_number(parse_line_in_file_correct: str):
-    deck_list_entry_regex = re.compile(r"^[0-9]{1,2}\s.*$")
-    match: re.Match = deck_list_entry_regex.match(parse_line_in_file_correct)
-    assert match is not None
+    assert list_parser.check_starts_with_count(parse_line_in_file_correct)
 
 
 def test_incorrect_line_fails(parse_line_in_file_incorrect):
-    deck_list_entry_regex = re.compile(r"^[0-9]{1,2}\s.*$")
-    match: re.Match[str] | None = deck_list_entry_regex.match(parse_line_in_file_incorrect)
-    assert match is None
+    assert not list_parser.check_starts_with_count(parse_line_in_file_incorrect)
 
 
 @pytest.fixture
