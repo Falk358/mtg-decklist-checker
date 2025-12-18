@@ -22,13 +22,12 @@ def test_incorrect_line_fails(parse_line_in_file_incorrect):
 
 
 @pytest.fixture
-def file_path_test_list() -> str:
+def file_path_mono_red_list() -> str:
     return "tests/test_data/test_list_mono_red.txt"
 
 
-def test_read_file(file_path_test_list: str):
-
-    list_as_string: str = list_parser.read_file_to_string(file_path_test_list)
+def test_read_file(file_path_mono_red_list: str):
+    list_as_string: str = list_parser.read_file_to_string(file_path_mono_red_list)
     assert list_as_string is not None
     assert type(list_as_string) == str
     assert len(list_as_string) > 0
@@ -65,6 +64,20 @@ def test_split_lines(test_list_mono_r: str):
     for index, line in enumerate(lines):
         assert type(line) == str
         assert line != "" and len(line) > 0
+
+
+@pytest.fixture
+def pauper_banlist_entry() -> str:
+    return "1 _____-o-saurus"
+
+
+def test_parse_pauper_banlist(pauper_banlist_entry: str):
+    import list_checker.list_parser as list_parser
+
+    parsed_lines: list[str] = list_parser.parse_into_lines(pauper_banlist_entry)
+    final: tuple = list_parser.parse_line_to_count_and_card_title(parsed_lines[0])
+    assert final[0] == 1
+    assert final[1] == "_____-o-saurus"
 
 
 @pytest.mark.parametrize(
