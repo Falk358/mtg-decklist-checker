@@ -3,6 +3,9 @@ import pytest
 import list_checker.list_parser as list_parser
 
 
+ERR = (-1, "ERR")
+
+
 @pytest.fixture
 def parse_line_in_file_incorrect():
     return "44fdafad"
@@ -85,8 +88,6 @@ def test_parse_pauper_banlist(pauper_banlist_entry: str):
 )
 def test_line_parses_with_incorrect_data_to_none(line_for_parsing_incorrect: str):
 
-    ERR = (-1, "ERR")
-
     should_be_None = list_parser.parse_line_to_count_and_card_title(line_for_parsing_incorrect)
     assert should_be_None == ERR
 
@@ -103,3 +104,12 @@ def test_line_parses_to_count_and_card_title(line_for_parsing_correct: str):
     assert type(line_parsed) == tuple
     assert line_parsed[0] == 3
     assert line_parsed[1] == "Relic of Progenitus"
+
+
+def test_file_parsed_to_count_and_card_title(test_list_mono_r: str):
+    import list_checker.list_parser as list_parser
+
+    list_parsed_tuples: list[tuple] = list_parser.parse_string_to_count_and_card_title(test_list_mono_r)
+    for curr_tuple in list_parsed_tuples:
+        assert curr_tuple[0] != ERR[0]
+        assert curr_tuple[1] != ERR[1]

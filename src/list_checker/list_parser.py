@@ -45,3 +45,8 @@ def parse_line_to_count_and_card_title(line: str) -> tuple[int, str]:
     except Exception as e:
         print(f"[ERROR] parsing line {line} with exception:\n {e}")
         return ERR
+
+
+def parse_string_to_count_and_card_title(decklist: str) -> list[tuple[int, str]]:
+    lines = parse_into_lines(decklist)
+    return [parse_line_to_count_and_card_title(line) for line in lines]
