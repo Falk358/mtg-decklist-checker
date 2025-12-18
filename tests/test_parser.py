@@ -1,8 +1,6 @@
-import re
-
 import pytest
 
-import list_parser
+import list_checker.list_parser as list_parser
 
 
 @pytest.fixture
