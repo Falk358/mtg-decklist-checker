@@ -1,16 +1,6 @@
 import pytest
 
 
-# @pytest.fixture
-# def card_title_banlist() -> str:
-#    return "Sol Ring"
-#
-#
-# @pytest.fixture
-# def card_title_decklist() -> str:
-#    return "sol Ring"
-
-
 @pytest.mark.parametrize(
     "card_title_decklist, card_title_banlist",
     [
