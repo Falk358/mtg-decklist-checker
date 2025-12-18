@@ -6,5 +6,3 @@ Supported Formats:
 
 * Commander
 * Pauper
-* Standard
-* Modern
