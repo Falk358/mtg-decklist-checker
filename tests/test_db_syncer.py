@@ -13,8 +13,17 @@ def test_db_initated(db_file_path: str):
     from list_checker.db_syncer import init_db
 
     engine = init_db(db_file_path)
-    with engine.connect() as conn:
+    try:
+        conn = engine.connect()
         assert conn
-        assert os.path.exists(db_file_path)
-    os.remove(db_file_path)
+        import sqlalchemy
+
+        needed_column_names = ["id", "name", "game_changer", "legalities"]
+        insp = sqlalchemy.inspect(engine)
+        assert insp.has_table("card_legalities")
+        for curr_col in insp.get_columns("card_legalities"):
+            assert curr_col["name"] in needed_column_names
+    finally:
+        conn.close()
+        os.remove(db_file_path)
     assert not os.path.exists(db_file_path)
