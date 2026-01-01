@@ -26,7 +26,7 @@ def test_incorrect_line_fails(parse_line_in_file_incorrect):
 
 @pytest.fixture
 def file_path_mono_red_list() -> str:
-    return "tests/test_data/test_list_mono_red.txt"
+    return "tests/test_resources/test_list_mono_red.txt"
 
 
 def test_read_file(file_path_mono_red_list: str):

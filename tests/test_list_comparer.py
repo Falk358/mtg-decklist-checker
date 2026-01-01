@@ -36,14 +36,14 @@ def test_card_title_does_not_match(card_title_decklist: str, card_title_banlist:
 def pauper_decklist() -> str:
     import list_checker.list_parser as list_parser
 
-    return list_parser.read_file_to_string("tests/test_data/test_list_mono_red.txt")
+    return list_parser.read_file_to_string("tests/test_resources/test_list_mono_red.txt")
 
 
 @pytest.fixture()
 def pauper_banlist() -> str:
     import list_checker.list_parser as list_parser
 
-    return list_parser.read_file_to_string("tests/test_data/pauper_banlist_2025_12_25.txt")
+    return list_parser.read_file_to_string("tests/test_resources/pauper_banlist_2025_12_25.txt")
 
 
 def test_legal_list_pauper(pauper_decklist: str, pauper_banlist: str):
