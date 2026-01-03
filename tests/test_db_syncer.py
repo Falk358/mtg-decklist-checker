@@ -87,9 +87,9 @@ def json_file_path() -> str:
 
 
 def test_read_from_json(json_file_path: str):
-    from list_checker.db_syncer import read_from_json
+    from list_checker.db_syncer import read_from_json_file
 
-    result: list[dict] = read_from_json(json_file_path)
+    result: list[dict] = read_from_json_file(json_file_path)
     assert len(result) == 3
     for item in result:
         assert type(item) == dict
@@ -105,9 +105,9 @@ def test_read_from_json(json_file_path: str):
 
 
 def test_read_json_insert_card_info_batched(json_file_path: str, db_file_path: str):
-    from list_checker.db_syncer import read_from_json, init_db, insert_card_info_batched
+    from list_checker.db_syncer import read_from_json_file, init_db, insert_card_info_batched
 
-    data_batch: list[dict] = read_from_json(json_file_path)
+    data_batch: list[dict] = read_from_json_file(json_file_path)
     assert len(data_batch) == 3
     try:
         engine = init_db(file_path=db_file_path)

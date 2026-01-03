@@ -41,7 +41,7 @@ def insert_card_info_batched(engine: Engine, card_info_list: list[dict]):
         session.commit()
 
 
-def read_from_json(file_path: str) -> list[dict]:
+def read_from_json_file(file_path: str) -> list[dict]:
     import ijson
 
     list_of_cards: list[dict] = []
