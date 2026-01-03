@@ -27,7 +27,7 @@ def init_db(file_path: str):
     return engine
 
 
-def insert_card_info_db(engine: Engine, card_info_obj: dict):
+def insert_card_info_single(engine: Engine, card_info_obj: dict):
     card_orm_obj = CardLegality(**card_info_obj)
     with Session(engine) as session:
         session.add(card_orm_obj)

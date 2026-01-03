@@ -65,11 +65,11 @@ def card_info_test_example() -> dict:
 
 def test_insert_card_info_db(db_file_path: str, card_info_test_example: dict):
     from list_checker.db_syncer import init_db
-    from list_checker.db_syncer import insert_card_info_db
+    from list_checker.db_syncer import insert_card_info_single
 
     engine = init_db(db_file_path)
     try:
-        insert_card_info_db(engine, card_info_test_example)
+        insert_card_info_single(engine, card_info_test_example)
         with Session(engine) as session:
             result = session.get(CardLegality, card_info_test_example["id"])
             assert result
