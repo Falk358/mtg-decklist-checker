@@ -123,3 +123,40 @@ def test_read_json_insert_card_info_batched(json_file_path: str, db_file_path: s
                 assert item.id in [data["id"] for data in data_batch]
     finally:
         os.remove(db_file_path)
+
+
+class MockScryFallResponse:
+    @staticmethod
+    def json():
+        return {
+            "object": "list",
+            "has_more": False,
+            "data": [
+                {
+                    "object": "bulk_data",
+                    "id": "1",
+                    "type": "oracle_cards",
+                    "download_uri": "https://incorrect.entry.url",
+                },
+                {
+                    "object": "bulk_data",
+                    "id": "2",
+                    "type": "default_cards",
+                    "download_uri": "https://correct.entry.url",
+                },
+            ],
+        }
+
+
+def test_fetch_bulk_data_url(monkeypatch):
+
+    def mock_get(*args, **kwargs):
+        return MockScryFallResponse()
+
+    monkeypatch.setattr("requests.get", mock_get)
+    from list_checker.db_syncer import fetch_bulk_data_url
+
+    url = fetch_bulk_data_url(
+        "https://api.scryfall.com/bulk-data",
+    )
+    assert url == "https://correct.entry.url"

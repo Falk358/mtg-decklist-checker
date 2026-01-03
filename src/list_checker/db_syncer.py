@@ -1,5 +1,6 @@
 import os
 
+from requests import RequestException
 from sqlalchemy import Column, String, JSON, create_engine, Table, MetaData, Boolean, Uuid
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, MappedColumn, Session
@@ -54,3 +55,20 @@ def read_from_json(file_path: str) -> list[dict]:
             }
             list_of_cards.append(record_processed)
     return list_of_cards
+
+
+def fetch_bulk_data_url(scryfall_url: str) -> str:
+    """
+    :param scryfall_url: api endpoint to retrieve bulk data
+    :return: download url for default_cards bulk data
+    """
+    import requests
+
+    response = requests.get(scryfall_url)
+    if not response:
+        raise RequestException(f"[ERROR] Failed to query {scryfall_url}")
+    data = response.json()["data"]
+    for record in data:
+        if record["type"] == "default_cards":
+            return record["download_uri"]
+    raise IndexError(f"[ERROR] download uri for default_cards bulk data could not be found in data: {data}")
