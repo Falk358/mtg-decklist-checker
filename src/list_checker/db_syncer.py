@@ -73,14 +73,17 @@ def fetch_bulk_data_url(scryfall_url: str) -> str:
     raise IndexError(f"[ERROR] download uri for default_cards bulk data could not be found in data: {data}")
 
 
-def fetch_bulk_data(bulk_data_url: str, file_target_path: str):
+def fetch_bulk_data(bulk_data_url: str, file_target_path: str, filename: str):
     # Make GET request to the API endpoint
     import requests
 
     response = requests.get(bulk_data_url)
     response.raise_for_status()
+    print("[INFO] downloading of bulk data completed... saving to file")
     import json
 
     # Save JSON response to file
-    with open(file_target_path, "w") as f:
+    target_file: str = os.path.join(file_target_path, filename)
+    with open(target_file, "w") as f:
         json.dump(response.json(), f, indent=4)
+    print(f"[INFO] saved bulk data to {target_file}")
