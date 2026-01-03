@@ -127,6 +127,9 @@ def test_read_json_insert_card_info_batched(json_file_path: str, db_file_path: s
 
 class MockScryFallResponse:
 
+    def raise_for_status(self):
+        pass
+
     @staticmethod
     def json():
         return {
@@ -164,6 +167,9 @@ def test_fetch_bulk_data_url(monkeypatch):
 
 
 class MockScryFallIndexError:
+
+    def raise_for_status(self):
+        pass
 
     @staticmethod
     def json():

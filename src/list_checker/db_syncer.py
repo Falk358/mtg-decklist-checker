@@ -65,8 +65,7 @@ def fetch_bulk_data_url(scryfall_url: str) -> str:
     import requests
 
     response = requests.get(scryfall_url)
-    if not response:
-        raise RequestException(f"[ERROR] Failed to query {scryfall_url}")
+    response.raise_for_status()
     data = response.json()["data"]
     for record in data:
         if record["type"] == "default_cards":
