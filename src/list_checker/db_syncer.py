@@ -1,5 +1,4 @@
 import os
-import uuid
 
 from sqlalchemy import Column, String, JSON, create_engine, Table, MetaData, Boolean, Uuid
 from sqlalchemy.engine.base import Engine
@@ -31,6 +30,13 @@ def insert_card_info_db(engine: Engine, card_info_obj: dict):
     card_orm_obj = CardLegality(**card_info_obj)
     with Session(engine) as session:
         session.add(card_orm_obj)
+        session.commit()
+
+
+def insert_card_info_batched(engine: Engine, card_info_list: list[dict]):
+    card_orm_obj_list = [CardLegality(**card_info) for card_info in card_info_list]
+    with Session(engine) as session:
+        session.add_all(card_orm_obj_list)
         session.commit()
 
 

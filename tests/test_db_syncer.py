@@ -102,3 +102,24 @@ def test_read_from_json(json_file_path: str):
         assert type(item["legalities"]) == dict
         assert len(item["legalities"].keys()) == 21
         assert len(item.keys()) == 4
+
+
+def test_read_json_insert_card_info_batched(json_file_path: str, db_file_path: str):
+    from list_checker.db_syncer import read_from_json, init_db, insert_card_info_batched
+
+    data_batch: list[dict] = read_from_json(json_file_path)
+    assert len(data_batch) == 3
+    try:
+        engine = init_db(file_path=db_file_path)
+        insert_card_info_batched(engine, data_batch)
+        with Session(engine) as session:
+            from list_checker.db_syncer import CardLegality
+
+            res = session.query(CardLegality).all()
+            assert len(res) > 0
+            assert len(res) == len(data_batch)
+            for item in res:
+                assert type(item) == CardLegality
+                assert item.id in [data["id"] for data in data_batch]
+    finally:
+        os.remove(db_file_path)
