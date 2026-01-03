@@ -1,5 +1,4 @@
 import os
-from uuid import UUID
 
 import pytest
 from sqlalchemy.orm import Session
@@ -35,7 +34,7 @@ def test_db_initated(db_file_path: str):
 @pytest.fixture
 def card_info_test_example() -> dict:
     return {
-        "id": UUID(hex="3d69a3e0-6a2e-475a-964e-0affed1c017d"),
+        "id": "3d69a3e0-6a2e-475a-964e-0affed1c017d",
         "name": "Birds of Paradise",
         "game_changer": False,
         "legalities": {
@@ -70,8 +69,6 @@ def test_insert_card_info_db(db_file_path: str, card_info_test_example: dict):
 
     engine = init_db(db_file_path)
     try:
-        conn = engine.connect()
-        assert conn
         insert_card_info_db(engine, card_info_test_example)
         with Session(engine) as session:
             result = session.get(CardLegality, card_info_test_example["id"])
@@ -80,7 +77,6 @@ def test_insert_card_info_db(db_file_path: str, card_info_test_example: dict):
             assert result.name == "Birds of Paradise"
 
     finally:
-        conn.close()
         os.remove(db_file_path)
     assert not os.path.exists(db_file_path)
 
