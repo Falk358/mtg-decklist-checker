@@ -41,6 +41,43 @@ def insert_card_info_batched(engine: Engine, card_info_list: list[dict]):
         session.commit()
 
 
+def get_card_info_by_name(engine: Engine, name: str) -> CardLegality:
+    legalities_not_found: dict = {
+        "standard": "card_not_in_db",
+        "future": "card_not_in_db",
+        "historic": "card_not_in_db",
+        "timeless": "card_not_in_db",
+        "gladiator": "card_not_in_db",
+        "pioneer": "card_not_in_db",
+        "modern": "card_not_in_db",
+        "legacy": "card_not_in_db",
+        "pauper": "card_not_in_db",
+        "vintage": "card_not_in_db",
+        "penny": "card_not_in_db",
+        "commander": "card_not_in_db",
+        "oathbreaker": "card_not_in_db",
+        "standardbrawl": "card_not_in_db",
+        "brawl": "card_not_in_db",
+        "alchemy": "card_not_in_db",
+        "paupercommander": "card_not_in_db",
+        "duel": "card_not_in_db",
+        "oldschool": "card_not_in_db",
+        "premodern": "card_not_in_db",
+        "predh": "card_not_in_db",
+    }
+    with Session(engine) as session:
+        card_orm_obj: CardLegality | None = session.query(CardLegality).filter_by(name=name).first()
+        if card_orm_obj is None:
+            card_orm_obj = CardLegality()
+            card_orm_obj.name = name
+            card_orm_obj.id = "-1"
+            card_orm_obj.game_changer = False
+            card_orm_obj.legalities = legalities_not_found
+            print(f"[INFO] card identified by name: {name} not found in database; returning dummy object")
+            return card_orm_obj
+        return card_orm_obj
+
+
 def read_from_json_file(file_path: str) -> list[dict]:
     import ijson
 

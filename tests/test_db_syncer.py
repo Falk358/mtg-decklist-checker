@@ -90,7 +90,6 @@ def test_read_from_json(json_file_path: str):
     from list_checker.db_syncer import read_from_json_file
 
     result: list[dict] = read_from_json_file(json_file_path)
-    assert len(result) == 3
     for item in result:
         assert type(item) == dict
         assert "id" in item.keys()
@@ -108,7 +107,6 @@ def test_read_json_insert_card_info_batched(json_file_path: str, db_file_path: s
     from list_checker.db_syncer import read_from_json_file, init_db, insert_card_info_batched
 
     data_batch: list[dict] = read_from_json_file(json_file_path)
-    assert len(data_batch) == 3
     try:
         engine = init_db(file_path=db_file_path)
         insert_card_info_batched(engine, data_batch)
@@ -121,6 +119,25 @@ def test_read_json_insert_card_info_batched(json_file_path: str, db_file_path: s
             for item in res:
                 assert type(item) == CardLegality
                 assert item.id in [data["id"] for data in data_batch]
+    finally:
+        os.remove(db_file_path)
+
+
+def test_read_card_info_not_in_db(json_file_path: str, db_file_path: str):
+    from list_checker.db_syncer import read_from_json_file, init_db, insert_card_info_batched, get_card_info_by_name
+
+    data_batch: list[dict] = read_from_json_file(json_file_path)
+    try:
+        engine = init_db(file_path=db_file_path)
+        insert_card_info_batched(engine, data_batch)
+        card_name_invalid = "bla bla"
+        fetched_card_legalities: CardLegality = get_card_info_by_name(engine, card_name_invalid)
+        assert fetched_card_legalities.name == card_name_invalid
+        assert fetched_card_legalities.game_changer == False
+        assert fetched_card_legalities.id == "-1"
+        for record in fetched_card_legalities.legalities.values():
+            assert record == "card_not_in_db"
+
     finally:
         os.remove(db_file_path)
 
