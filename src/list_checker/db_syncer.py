@@ -74,7 +74,6 @@ def get_card_info_by_name(engine: Engine, name: str) -> CardLegality:
             card_orm_obj.game_changer = False
             card_orm_obj.legalities = legalities_not_found
             print(f"[INFO] card identified by name: {name} not found in database; returning dummy object")
-            return card_orm_obj
         return card_orm_obj
 
 
