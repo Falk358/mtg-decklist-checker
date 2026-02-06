@@ -19,8 +19,8 @@ def card_title_matches(card_title_decklist: str, card_title_banlist: str) -> boo
 def list_is_legal_according_to_banlist(decklist: str, banlist: str) -> bool:
     import list_checker.list_parser as list_parser
 
-    decklist_tuples: list[tuple[int, str]] = list_parser.parse_string_to_count_and_card_title(decklist)
-    banlist_tuples: list[tuple[int, str]] = list_parser.parse_string_to_count_and_card_title(banlist)
+    decklist_tuples: list[tuple[int, str]] = list_parser.parse_decklist_to_count_and_card_title(decklist)
+    banlist_tuples: list[tuple[int, str]] = list_parser.parse_decklist_to_count_and_card_title(banlist)
     for entry in decklist_tuples:
         if entry[1] in banlist_tuples:
             return False

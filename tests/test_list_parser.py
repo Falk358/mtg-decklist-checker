@@ -109,7 +109,7 @@ def test_line_parses_to_count_and_card_title(line_for_parsing_correct: str):
 def test_file_parsed_to_count_and_card_title(test_list_mono_r: str):
     import list_checker.list_parser as list_parser
 
-    list_parsed_tuples: list[tuple] = list_parser.parse_string_to_count_and_card_title(test_list_mono_r)
+    list_parsed_tuples: list[tuple] = list_parser.parse_decklist_to_count_and_card_title(test_list_mono_r)
     for curr_tuple in list_parsed_tuples:
         assert curr_tuple[0] != ERR[0]
         assert curr_tuple[1] != ERR[1]
