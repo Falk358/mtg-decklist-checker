@@ -1,3 +1,4 @@
+from list_checker.db_syncer import CardLegalityObj
 import os
 
 import pytest
@@ -11,7 +12,7 @@ def db_engine(request):
     from list_checker.db_syncer import read_from_json_file, init_db, insert_card_info_batched
 
     engine: Engine = init_db(filepath)
-    data_batch: list[dict] = read_from_json_file(jsonpath)
+    data_batch: list[CardLegalityObj] = read_from_json_file(jsonpath)
     insert_card_info_batched(engine, data_batch)
 
     def finalizer():

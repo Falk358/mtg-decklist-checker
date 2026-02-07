@@ -4,6 +4,7 @@ from requests import RequestException
 from sqlalchemy import Column, String, JSON, create_engine, Table, MetaData, Boolean, Uuid
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, MappedColumn, Session
+from pydantic import BaseModel
 
 
 class Base(DeclarativeBase):
@@ -19,6 +20,13 @@ class CardLegality(Base):
     legalities: Mapped[dict[str, str]] = MappedColumn()
 
 
+class CardLegalityObj(BaseModel):
+    id: str
+    name: str
+    game_changer: bool
+    legalities: dict[str, str]
+
+
 def init_db(file_path: str):
     if os.path.exists(file_path):
         raise FileExistsError(f"[ERROR] DB: {file_path} already exists; skipping init")
@@ -27,15 +35,15 @@ def init_db(file_path: str):
     return engine
 
 
-def insert_card_info_single(engine: Engine, card_info_obj: dict):
-    card_orm_obj = CardLegality(**card_info_obj)
+def insert_card_info_single(engine: Engine, card_info_obj: CardLegalityObj):
+    card_orm_obj = CardLegality(**card_info_obj.model_dump())
     with Session(engine) as session:
         session.add(card_orm_obj)
         session.commit()
 
 
-def insert_card_info_batched(engine: Engine, card_info_list: list[dict]):
-    card_orm_obj_list = [CardLegality(**card_info) for card_info in card_info_list]
+def insert_card_info_batched(engine: Engine, card_info_list: list[CardLegalityObj]):
+    card_orm_obj_list = [CardLegality(**card_info.model_dump()) for card_info in card_info_list]
     with Session(engine) as session:
         session.add_all(card_orm_obj_list)
         session.commit()
@@ -77,18 +85,18 @@ def get_card_info_by_name(engine: Engine, name: str) -> CardLegality:
         return card_orm_obj
 
 
-def read_from_json_file(file_path: str) -> list[dict]:
+def read_from_json_file(file_path: str) -> list[CardLegalityObj]:
     import ijson
 
-    list_of_cards: list[dict] = []
+    list_of_cards: list[CardLegalityObj] = []
     with open(file_path) as json_file:
         for record in ijson.items(json_file, "item"):
-            record_processed: dict = {
-                "id": record["id"],
-                "name": record["name"],
-                "game_changer": record["game_changer"],
-                "legalities": record["legalities"],
-            }
+            record_processed: CardLegalityObj = CardLegalityObj(
+                id=record["id"],
+                name=record["name"],
+                game_changer=record["game_changer"],
+                legalities=record["legalities"],
+            )
             list_of_cards.append(record_processed)
     return list_of_cards
 

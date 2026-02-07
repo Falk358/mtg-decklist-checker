@@ -1,4 +1,5 @@
 from list_checker.db_syncer import CardLegality
+from list_checker.db_syncer import init_db
 
 from list_checker.legality_checker import get_card_info_by_name
 
@@ -13,6 +14,10 @@ router = APIRouter(
 
 class CardName(BaseModel):
     card_name: str
+
+
+def init_and_load_db():
+    db = init_db()
 
 
 @router.post("/")
