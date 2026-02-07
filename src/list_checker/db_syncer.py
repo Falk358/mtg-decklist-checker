@@ -27,7 +27,7 @@ class CardLegalityObj(BaseModel):
     legalities: dict[str, str]
 
 
-def init_db(file_path: str):
+def init_db(file_path: str) -> Engine:
     if os.path.exists(file_path):
         raise FileExistsError(f"[ERROR] DB: {file_path} already exists; skipping init")
     engine = create_engine(f"sqlite:///{file_path}")

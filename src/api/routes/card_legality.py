@@ -17,7 +17,13 @@ class CardName(BaseModel):
 
 
 def init_and_load_db():
-    db = init_db()
+    """WIP: from main import get_config
+
+    config = get_config()
+    db_file_path: str = config.get("Database", "SqliteDbFilePath")
+    db = init_db(db_file_path)
+    """
+    pass
 
 
 @router.post("/")
