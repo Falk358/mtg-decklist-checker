@@ -7,16 +7,16 @@ from sqlalchemy import Engine
 
 @pytest.fixture
 def db_engine(request):
-    filepath = os.path.join(os.path.dirname(__file__), "test_resources/test_legality_fetcher.db")
-    jsonpath = os.path.join(os.path.dirname(__file__), "test_resources/test_card_list.json")
+    db_filepath: str = os.path.join(os.path.dirname(__file__), "test_resources/test_legality_fetcher.db")
+    jsonpath: str = os.path.join(os.path.dirname(__file__), "test_resources/test_card_list.json")
     from list_checker.db_syncer import read_from_json_file, init_db, insert_card_info_batched
 
-    engine: Engine = init_db(filepath)
+    engine: Engine = init_db(db_filepath)
     data_batch: list[CardLegalityObj] = read_from_json_file(jsonpath)
     insert_card_info_batched(engine, data_batch)
 
     def finalizer():
-        os.remove(filepath)
+        os.remove(db_filepath)
 
     request.addfinalizer(finalizer)  # request from pytest: add clean up hook
     return engine
