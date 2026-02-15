@@ -1,7 +1,8 @@
-from list_checker.db_syncer import CardLegality
+from list_checker.utils import get_config
+from sqlalchemy import Engine, create_engine
+
 from list_checker.db_syncer import init_db
 
-from list_checker.legality_checker import get_card_info_by_name
 
 from fastapi import APIRouter
 
@@ -16,14 +17,17 @@ class CardName(BaseModel):
     card_name: str
 
 
-def init_and_load_db():
-    """WIP: from main import get_config
+def open_db():
 
     config = get_config()
     db_file_path: str = config.get("Database", "SqliteDbFilePath")
-    db = init_db(db_file_path)
-    """
-    pass
+    try:
+        db = init_db(db_file_path)
+    except FileExistsError:
+        print(f"database file {db_file_path} already exists; opening Engine on existing file instead")
+        db: Engine = create_engine("sqlite:///" + db_file_path)
+
+    return db
 
 
 @router.post("/")
