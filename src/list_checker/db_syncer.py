@@ -27,10 +27,15 @@ class CardLegalityObj(BaseModel):
     legalities: dict[str, str]
 
 
-def init_db(file_path: str) -> Engine:
-    if os.path.exists(file_path):
-        raise FileExistsError(f"[ERROR] DB: {file_path} already exists; skipping init")
-    engine = create_engine(f"sqlite:///{file_path}")
+def init_db(filepath_db_file: str) -> Engine:
+    """
+    :param filepath_db_file: path to generated mysqlite db file
+    :return: sqlAlchemy Engine object representing Sqllite database with empty initialized table schemas
+    This method initializes the table schema for storing legality Information obtained from .json database
+    """
+    if os.path.exists(filepath_db_file):
+        raise FileExistsError(f"[ERROR] DB: {filepath_db_file} already exists; skipping init")
+    engine: Engine = create_engine(f"sqlite:///{filepath_db_file}")
     CardLegality.metadata.create_all(engine)
     return engine
 

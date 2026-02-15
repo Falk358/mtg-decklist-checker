@@ -100,7 +100,7 @@ def test_read_json_insert_card_info_batched(json_file_path: str, db_file_path: s
 
     data_batch: list[CardLegalityObj] = read_from_json_file(json_file_path)
     try:
-        engine = init_db(file_path=db_file_path)
+        engine = init_db(filepath_db_file=db_file_path)
         insert_card_info_batched(engine, data_batch)
         with Session(engine) as session:
             from list_checker.db_syncer import CardLegality
@@ -120,7 +120,7 @@ def test_read_card_info_not_in_db(json_file_path: str, db_file_path: str):
 
     data_batch: list[CardLegalityObj] = read_from_json_file(json_file_path)
     try:
-        engine = init_db(file_path=db_file_path)
+        engine = init_db(filepath_db_file=db_file_path)
         insert_card_info_batched(engine, data_batch)
         card_name_invalid = "bla bla"
         fetched_card_legalities: CardLegality = get_card_info_by_name(engine, card_name_invalid)
