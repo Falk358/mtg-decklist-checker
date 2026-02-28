@@ -1,4 +1,4 @@
-from typing import Any, Generator
+from typing import Any, Generator, LiteralString
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Engine, create_engine, Column, String, Integer, text
@@ -18,7 +18,7 @@ def test_client():
     yield client
 
 
-def test_cardname_endpoint(test_client: TestClient):
+def test_cardname_endpoint_responds_with_200(test_client: TestClient):
     response = test_client.post(url="/cardlegality", json={"card_name": "Sol Ring"})
     print(response.json())
     assert response.status_code == 200
@@ -26,7 +26,9 @@ def test_cardname_endpoint(test_client: TestClient):
 
 @pytest.fixture
 def db_filepath(request):
-    db_filepath: str = os.path.join(os.path.dirname(__file__), "test_resources/test_card_api_routes_card_legality.db")
+    db_filepath: LiteralString | str | bytes = os.path.join(
+        os.path.dirname(__file__), "test_resources/test_card_api_routes_card_legality.db"
+    )
 
     return db_filepath
 
@@ -62,7 +64,7 @@ def db_engine(request, db_filepath) -> Generator[Engine, Any, None]:
     yield engine
 
 
-def test_open_db_when_file_already_exists(db_filepath: str, db_engine: Engine, monkeypatch):
+def test_open_db_when_db_file_already_exists_yields_existing_db(db_filepath: str, db_engine: Engine, monkeypatch):
     top_directory_of_db_file: str = os.path.dirname(db_filepath)
     db_file_name: str = os.path.basename(db_filepath)
 
